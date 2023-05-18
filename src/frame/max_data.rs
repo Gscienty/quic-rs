@@ -7,4 +7,6 @@
 ///     Type (i) = 0x10,
 ///     Maximum Data (i),
 /// }
-pub struct MaxDataFrame {}
+pub struct MaxDataFrame {
+    maximum_data: u64,
+}

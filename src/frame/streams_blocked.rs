@@ -7,4 +7,6 @@
 ///     Type (i) = 0x16..0x17,
 ///     Maximum Streams (i),
 /// }
-pub struct StreamsBlocked {}
+pub struct StreamsBlocked {
+    maximum_streams: u64,
+}

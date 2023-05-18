@@ -9,4 +9,7 @@
 ///     Stream ID (i),
 ///     Maximum Stream Data (i),
 /// }
-pub struct StreamDataBlockedFrame {}
+pub struct StreamDataBlockedFrame {
+    stream_id: u64,
+    maximum_data: u64,
+}

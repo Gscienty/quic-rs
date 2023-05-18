@@ -12,4 +12,9 @@
 ///     Reason Phrase Length (i),
 ///     Reason Phrase (..),
 /// }
-pub struct ConnectionCloseFrame {}
+pub struct ConnectionCloseFrame {
+    sys_err: bool,
+    error_code: u64,
+    frame_type: Option<u64>,
+    reason: String,
+}

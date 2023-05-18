@@ -8,4 +8,6 @@
 ///     Type (i) = 0x19,
 ///     Sequence Number (i),
 /// }
-pub struct RetireConnectionIDFrame {}
+pub struct RetireConnectionIDFrame {
+    seq: u64,
+}

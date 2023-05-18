@@ -11,4 +11,9 @@
 ///     Connection ID (8..160),
 ///     Stateless Reset Token (128),
 /// }
-pub struct NewConnectionIDFrame {}
+pub struct NewConnectionIDFrame {
+    seq: u64,
+    retire_prior_to: u64,
+    connection_id: Vec<u8>,
+    reset_token: [u8; 128],
+}

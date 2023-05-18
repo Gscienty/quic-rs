@@ -7,4 +7,6 @@
 ///     Type (i) = 0x1a,
 ///     Data (64),
 /// }
-pub struct PathChallengeFrame {}
+pub struct PathChallengeFrame {
+    data: [u8; 64],
+}

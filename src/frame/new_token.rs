@@ -10,4 +10,6 @@
 ///     Token Length (i),
 ///     Token (..),
 /// }
-pub struct NewTokenFrame {}
+pub struct NewTokenFrame {
+    token: Vec<u8>,
+}

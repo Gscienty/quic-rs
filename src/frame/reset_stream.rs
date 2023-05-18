@@ -12,4 +12,8 @@
 ///     Application Protocol Error Code (i),
 ///     Final Size (i),
 /// }
-pub struct ResetStreamFrame {}
+pub struct ResetStreamFrame {
+    stream_id: u64,
+    error_code: u64,
+    final_size: u64,
+}

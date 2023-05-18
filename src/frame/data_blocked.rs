@@ -8,4 +8,6 @@
 ///     Type (i) = 0x14,
 ///     Maximum Data (i),
 /// }
-pub struct DataBlockedFrame {}
+pub struct DataBlockedFrame {
+    maximum_data: u64,
+}

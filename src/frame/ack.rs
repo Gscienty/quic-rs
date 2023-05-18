@@ -28,4 +28,21 @@
 ///     ACK Range (..) ...,
 ///     [ECN Counts (...)]
 /// }
-pub struct ACKFrame {}
+pub struct ACKFrame {
+    largest: u64,
+    delay: u64,
+    first_range: u64,
+    ranges: Vec<ACKRange>,
+    ecn: Option<ECNCounts>,
+}
+
+pub struct ACKRange {
+    gap: u64,
+    length: u64,
+}
+
+pub struct ECNCounts {
+    ect0: u64,
+    ect1: u64,
+    ecn_ce: u64,
+}

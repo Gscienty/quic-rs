@@ -17,4 +17,7 @@
 ///     Stream ID (i),
 ///     Application Protocol Error Code (i),
 /// }
-pub struct StopSendingFrame {}
+pub struct StopSendingFrame {
+    stream_id: u64,
+    error_code: u64,
+}

@@ -13,4 +13,7 @@
 ///     Length (i),
 ///     Crypto Data (..),
 /// }
-pub struct CryptoFrame {}
+pub struct CryptoFrame {
+    offset: u64,
+    data: Vec<u8>,
+}

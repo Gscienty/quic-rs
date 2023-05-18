@@ -7,4 +7,6 @@
 ///     Type (i) = 0x1a,
 ///     Data (64),
 /// }
-pub struct PathResponseFrame {}
+pub struct PathResponseFrame {
+    data: [u8; 64],
+}

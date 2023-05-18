@@ -12,4 +12,7 @@
 ///     Stream ID (i),
 ///     Maximum Stream Data (i),
 /// }
-pub struct MaxStreamDataFrame {}
+pub struct MaxStreamDataFrame {
+    stream_id: u64,
+    maximum_data: u64,
+}

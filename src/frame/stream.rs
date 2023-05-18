@@ -10,4 +10,8 @@
 ///     [Length (i)],
 ///     Stream Data (..),
 /// }
-pub struct StreamFrame {}
+pub struct StreamFrame {
+    stream_id: u64,
+    offset: Option<u64>,
+    data: Vec<u8>,
+}
