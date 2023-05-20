@@ -18,12 +18,36 @@ use super::{
 ///     Token (..),
 /// }
 pub struct NewTokenFrame {
+    /// Token 是客户端可以用于未来 Initial 数据包的不透明 Blob.
+    /// 客户端如果 Token 为空的 NEW_TOKEN 帧, 客户端将返回 `FRAME_ENCODING_ERROR` 错误.
     token: Vec<u8>,
 }
 
 impl NewTokenFrame {
-    pub fn new() -> Self {
+    /// 构造一个 NEW_TOKEN 帧.
+    ///
+    /// # Returns
+    /// NEW_TOKEN 帧
+    pub(crate) fn new() -> Self {
         Self { token: Vec::new() }
+    }
+
+    /// 获取 Token
+    ///
+    /// # Returns
+    /// 返回 Token
+    #[inline(always)]
+    pub(crate) fn get_token(&self) -> &[u8] {
+        &self.token
+    }
+
+    /// 设置 Token
+    ///
+    /// # Arguments
+    /// `token` - Token
+    #[inline(always)]
+    pub(crate) fn set_token(&mut self, token: &[u8]) {
+        self.token.extend_from_slice(token)
     }
 }
 

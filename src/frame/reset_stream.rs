@@ -19,19 +19,86 @@ use super::{
 ///     Application Protocol Error Code (i),
 ///     Final Size (i),
 /// }
-pub struct ResetStreamFrame {
+pub(crate) struct ResetStreamFrame {
+    /// Stream 标识
     stream_id: u64,
+
+    /// 应用错误码
+    ///
+    /// 由应用协议自行管理
     error_code: u64,
+
+    /// QUIC 协议中 Stream 的最终大小.
+    ///
+    /// Stream 消耗的流量控制信用量. 最终大小是发送的最大偏移字节的偏移量加 1,
+    /// 如果没有发送任何字节, 则为 0.
     final_size: usize,
 }
 
 impl ResetStreamFrame {
-    pub fn new() -> Self {
+    /// 构造一个 RESET_STREAM 帧.
+    ///
+    /// # Returns
+    /// RESET_STREAM 帧
+    pub(crate) fn new() -> Self {
         Self {
             stream_id: 0,
             error_code: 0,
             final_size: 0,
         }
+    }
+
+    /// 获取 Stream 标识
+    ///
+    /// # Returns
+    /// 返回 Stream 标识
+    #[inline(always)]
+    pub(crate) const fn get_stream_id(&self) -> u64 {
+        self.stream_id
+    }
+
+    /// 设置 Stream 标识
+    ///
+    /// # Arguments
+    /// `stream_id` - Stream 标识
+    #[inline(always)]
+    pub(crate) fn set_stream_id(&mut self, stream_id: u64) {
+        self.stream_id = stream_id;
+    }
+
+    /// 获取 Stream 的最终大小.
+    ///
+    /// # Returns
+    /// 返回 Stream 的最终大小
+    #[inline(always)]
+    pub(crate) const fn get_final_size(&self) -> usize {
+        self.final_size
+    }
+
+    /// 设置 Stream 的最终大小.
+    ///
+    /// # Arguments
+    /// `final_size` - Stream 的最终大小
+    #[inline(always)]
+    pub(crate) fn set_final_size(&mut self, final_size: usize) {
+        self.final_size = final_size
+    }
+
+    /// 获取应用错误码
+    ///
+    /// # Returns
+    /// 返回应用错误码
+    #[inline(always)]
+    pub(crate) const fn get_error_code(&self) -> u64 {
+        self.error_code
+    }
+
+    /// 设置应用错误码
+    ///
+    /// # Arguments
+    /// `error_code` - 应用错误码
+    pub(crate) fn set_error_code(&mut self, error_code: u64) {
+        self.error_code = error_code
     }
 }
 

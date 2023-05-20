@@ -26,6 +26,16 @@ impl StreamsBlockedFrame {
             maximum_streams: 0,
         }
     }
+
+    #[inline(always)]
+    pub const fn is_bidi(&self) -> bool {
+        self.bidi_flag
+    }
+
+    #[inline(always)]
+    pub const fn get_streams(&self) -> usize {
+        self.maximum_streams
+    }
 }
 
 impl Serializer for StreamsBlockedFrame {

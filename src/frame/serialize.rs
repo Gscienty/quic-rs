@@ -3,7 +3,7 @@ use std::io::{self, Read, Write};
 /// QUIC 帧序列化特征
 ///
 /// 具备 Serializer 特征的 QUIC 帧，具备把自身的数据转化为网络比特流
-pub trait Serializer {
+pub(crate) trait Serializer {
     /// 将自身字段信息序列化为网络比特流
     ///
     /// # Arguments
@@ -17,7 +17,7 @@ pub trait Serializer {
 /// QUIC 帧反序列化特征
 ///
 /// 具备 Deserializer 特征的 QUIC 帧，具备将网络流转化为自身字段值的能力
-pub trait Deserializer {
+pub(crate) trait Deserializer {
     /// 网络比特流中的信息转化为自身字段信息
     ///
     /// # Arguments

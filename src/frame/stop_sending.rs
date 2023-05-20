@@ -24,17 +24,61 @@ use super::{
 ///     Stream ID (i),
 ///     Application Protocol Error Code (i),
 /// }
-pub struct StopSendingFrame {
+pub(crate) struct StopSendingFrame {
+    /// Stream 标识
     stream_id: u64,
+
+    /// 应用错误码
+    ///
+    /// 由应用协议自行管理
     error_code: u64,
 }
 
 impl StopSendingFrame {
-    pub fn new() -> Self {
+    /// 构造一个  STOP_SENDING 帧
+    ///
+    /// # Returns
+    /// STOP_SENDING 帧
+    pub(crate) fn new() -> Self {
         Self {
             stream_id: 0,
             error_code: 0,
         }
+    }
+
+    /// 获取 Stream 标识
+    ///
+    /// # Returns
+    /// 返回 Stream 标识
+    #[inline(always)]
+    pub(crate) const fn get_stream_id(&self) -> u64 {
+        self.stream_id
+    }
+
+    /// 设置 Stream 标识
+    ///
+    /// # Arguments
+    /// `stream_id` - Stream 标识
+    #[inline(always)]
+    pub(crate) fn set_stream_id(&mut self, stream_id: u64) {
+        self.stream_id = stream_id;
+    }
+
+    /// 获取应用错误码
+    ///
+    /// # Returns
+    /// 返回应用错误码
+    #[inline(always)]
+    pub(crate) const fn get_error_code(&self) -> u64 {
+        self.error_code
+    }
+
+    /// 设置应用错误码
+    ///
+    /// # Arguments
+    /// `error_code` - 应用错误码
+    pub(crate) fn set_error_code(&mut self, error_code: u64) {
+        self.error_code = error_code
     }
 }
 

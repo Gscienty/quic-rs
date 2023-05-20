@@ -20,17 +20,63 @@ use super::{
 ///     Length (i),
 ///     Crypto Data (..),
 /// }
-pub struct CryptoFrame {
+pub(crate) struct CryptoFrame {
+    /// CRYPTO 的数据偏移量
     offset: usize,
+
+    /// CRYPTO 数据
+    ///
+    /// CRYPTO Stream 上已经传递的最大数据量不能超过 2^62 - 1 字节.
+    /// 接收到超过此限制时，应该是 `FRAME_ENCODING_ERROR` 或 `CRYPTO_BUFFER_EXCEEDED` 错误.
     data: Vec<u8>,
 }
 
 impl CryptoFrame {
-    pub fn new() -> Self {
+    /// 构造一个 CRYPTO 帧.
+    ///
+    /// # Returns
+    /// CRYPTO 帧
+    pub(crate) fn new() -> Self {
         Self {
             offset: 0,
             data: Vec::new(),
         }
+    }
+
+    /// 获取 CRYPTO 数据偏移量
+    ///
+    /// # Returns
+    /// CRYPTO 数据偏移量
+    #[inline(always)]
+    pub(crate) const fn get_offset(&self) -> usize {
+        self.offset
+    }
+
+    /// 设置 CRYPTO 数据偏移量
+    ///
+    /// # Arguments
+    /// `offset` - 数据偏移量
+    #[inline(always)]
+    pub(crate) fn set_offset(&mut self, offset: usize) {
+        self.offset = offset
+    }
+
+    /// 获取 CRYPTO 帧携带的数据
+    ///
+    /// # Returns
+    /// 返回 CRYPTO 帧携带的数据
+    #[inline(always)]
+    pub(crate) fn get_data(&self) -> &[u8] {
+        &self.data
+    }
+
+    /// 设置 CRYPTO 帧携带的数据
+    ///
+    /// # Arguments
+    /// `data` - 需要写进 CRYPTO 帧的数据
+    #[inline(always)]
+    pub(crate) fn set_data(&mut self, data: &[u8]) {
+        self.data.extend_from_slice(data);
     }
 }
 
