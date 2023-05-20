@@ -1,3 +1,10 @@
+use crate::util;
+
+use super::{
+    serialize::{Deserializer, Serializer},
+    types::FrameType,
+};
+
 /// STOP_SENDING 帧
 ///
 /// 用于请求对方停止在某个流上的传输.
@@ -20,4 +27,42 @@
 pub struct StopSendingFrame {
     stream_id: u64,
     error_code: u64,
+}
+
+impl StopSendingFrame {
+    pub fn new() -> Self {
+        Self {
+            stream_id: 0,
+            error_code: 0,
+        }
+    }
+}
+
+impl Serializer for StopSendingFrame {
+    fn write(&self, w: &mut dyn std::io::Write) -> Result<usize, std::io::Error> {
+        let mut payload_size = 1;
+
+        w.write_all(&[FrameType::StopSending.into()])?;
+
+        payload_size += util::write_varint(self.stream_id, w)?;
+        payload_size += util::write_varint(self.error_code, w)?;
+
+        Ok(payload_size)
+    }
+}
+
+impl Deserializer for StopSendingFrame {
+    fn read(&mut self, r: &mut dyn std::io::Read) -> Result<usize, std::io::Error> {
+        let mut payload_size = 0;
+
+        let stream_id = util::read_varint(r)?;
+        self.stream_id = stream_id.value;
+        payload_size += stream_id.size;
+
+        let error_code = util::read_varint(r)?;
+        self.error_code = error_code.value;
+        payload_size += error_code.size;
+
+        Ok(payload_size)
+    }
 }

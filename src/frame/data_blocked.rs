@@ -1,3 +1,10 @@
+use crate::util;
+
+use super::{
+    serialize::{Deserializer, Serializer},
+    types::FrameType,
+};
+
 /// DATA_BLOCKED 帧
 ///
 /// 用于流量控制算法的调整输入.
@@ -9,5 +16,35 @@
 ///     Maximum Data (i),
 /// }
 pub struct DataBlockedFrame {
-    maximum_data: u64,
+    maximum_data: usize,
+}
+
+impl DataBlockedFrame {
+    pub fn new() -> Self {
+        Self { maximum_data: 0 }
+    }
+}
+
+impl Serializer for DataBlockedFrame {
+    fn write(&self, w: &mut dyn std::io::Write) -> Result<usize, std::io::Error> {
+        let mut payload_size = 1;
+
+        w.write_all(&[FrameType::DataBlocked.into()])?;
+
+        payload_size += util::write_varint(self.maximum_data as u64, w)?;
+
+        Ok(payload_size)
+    }
+}
+
+impl Deserializer for DataBlockedFrame {
+    fn read(&mut self, r: &mut dyn std::io::Read) -> Result<usize, std::io::Error> {
+        let mut payload_size = 0;
+
+        let maximum_data = util::read_varint(r)?;
+        self.maximum_data = maximum_data.value as usize;
+        payload_size += maximum_data.size;
+
+        Ok(payload_size)
+    }
 }

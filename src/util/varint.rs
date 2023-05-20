@@ -1,45 +1,45 @@
-use std::{
-    io::{self, Read, Write},
-    ops,
-};
+use std::io::{self, Read, Write};
 
-pub(crate) fn read_varint<T>(r: &mut dyn Read) -> Result<T, io::Error>
-where
-    T: ops::BitOr<Output = T> + From<u8> + ops::Shl<Output = T>,
-{
-    let mut first_byte: [u8; 1] = [0; 1];
-    r.read_exact(&mut first_byte)?;
+use super::byteorder;
 
-    let first_part = T::from(first_byte[0] & 0b00_111111);
-    match first_byte[0] & 0b11_000000 {
-        0b00_000000 => Ok(T::from(first_byte[0])),
-        0b01_000000 => {
-            let mut remain_bytes: [u8; 1] = [0; 1];
-            r.read_exact(&mut remain_bytes)?;
+#[derive(Debug, PartialEq)]
+pub(crate) struct Varint {
+    pub(crate) value: u64,
+    pub(crate) size: usize,
+}
 
-            Ok(first_part.shl(8.into()) | T::from(remain_bytes[0]).into())
+pub(crate) fn read_varint(r: &mut dyn Read) -> Result<Varint, io::Error> {
+    let mut bytes = [0; 8];
+    r.read_exact(&mut bytes[..1])?;
+
+    let prefix = (bytes[0] & 0b11_000000) >> 6;
+    bytes[0] &= 0b00_111111;
+
+    match prefix {
+        0b00 => Ok(Varint {
+            value: byteorder::from_bigendian_bytes::<1>(&bytes[..1]),
+            size: 1,
+        }),
+        0b01 => {
+            r.read_exact(&mut bytes[1..2])?;
+            Ok(Varint {
+                value: byteorder::from_bigendian_bytes::<2>(&bytes[..2]),
+                size: 2,
+            })
         }
-        0b10_000000 => {
-            let mut remain_bytes: [u8; 3] = [0; 3];
-            r.read_exact(&mut remain_bytes)?;
-
-            Ok(first_part.shl(24.into())
-                | T::from(remain_bytes[0]).shl(16.into())
-                | T::from(remain_bytes[1]).shl(8.into())
-                | T::from(remain_bytes[2]))
+        0b10 => {
+            r.read_exact(&mut bytes[1..4])?;
+            Ok(Varint {
+                value: byteorder::from_bigendian_bytes::<4>(&bytes[..4]),
+                size: 4,
+            })
         }
-        0b11_000000 => {
-            let mut remain_bytes: [u8; 7] = [0; 7];
-            r.read_exact(&mut remain_bytes)?;
-
-            Ok(first_part.shl(56.into())
-                | T::from(remain_bytes[0]).shl(48.into())
-                | T::from(remain_bytes[1]).shl(40.into())
-                | T::from(remain_bytes[2]).shl(32.into())
-                | T::from(remain_bytes[3]).shl(24.into())
-                | T::from(remain_bytes[4]).shl(16.into())
-                | T::from(remain_bytes[5]).shl(8.into())
-                | T::from(remain_bytes[6]))
+        0b11 => {
+            r.read_exact(&mut bytes[1..8])?;
+            Ok(Varint {
+                value: byteorder::from_bigendian_bytes::<8>(&bytes[..8]),
+                size: 8,
+            })
         }
         _ => Err(io::Error::new(
             io::ErrorKind::Other,
@@ -48,30 +48,36 @@ where
     }
 }
 
-pub(crate) fn write_varint<T>(n: T, w: &mut dyn Write) -> Result<(), io::Error>
-where
-    T: ops::Shr<Output = T> + Into<usize> + Copy + PartialOrd,
-{
-    let n = n.into();
+pub(crate) fn write_varint(n: u64, w: &mut dyn Write) -> Result<usize, io::Error> {
     match n {
-        0..=63 => w.write_all(&[n as u8]),
-        64..=16383 => w.write_all(&[(n >> 8) as u8 | 0b01_000000, n as u8]),
-        16384..=1073741823 => w.write_all(&[
-            (n >> 24) as u8 | 0b10_000000,
-            (n >> 16) as u8,
-            (n >> 8) as u8,
-            n as u8,
-        ]),
-        1073741824..=4611686018427387903 => w.write_all(&[
-            (n >> 56) as u8 | 0b11_000000,
-            (n >> 48) as u8,
-            (n >> 40) as u8,
-            (n >> 32) as u8,
-            (n >> 24) as u8,
-            (n >> 16) as u8,
-            (n >> 8) as u8,
-            n as u8,
-        ]),
+        0..=63 => {
+            w.write_all(&byteorder::to_bigendian_bytes::<_, 1>(n))?;
+
+            Ok(1)
+        }
+        64..=16383 => {
+            let mut buf = byteorder::to_bigendian_bytes::<_, 2>(n);
+            buf[0] |= 0b01_000000;
+
+            w.write_all(&buf)?;
+
+            Ok(2)
+        }
+        16384..=1073741823 => {
+            let mut buf = byteorder::to_bigendian_bytes::<_, 4>(n);
+            buf[0] |= 0b10_000000;
+
+            w.write_all(&buf)?;
+
+            Ok(4)
+        }
+        1073741824..=4611686018427387903 => {
+            let mut buf = byteorder::to_bigendian_bytes::<_, 8>(n);
+            buf[0] |= 0b11_000000;
+
+            w.write_all(&buf)?;
+            Ok(8)
+        }
         _ => Err(io::Error::new(
             io::ErrorKind::Unsupported,
             "unexcepted variable-length number",
