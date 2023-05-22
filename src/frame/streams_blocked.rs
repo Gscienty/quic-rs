@@ -15,11 +15,20 @@ use super::{
 ///     Maximum Streams (i),
 /// }
 pub struct StreamsBlockedFrame {
+    /// 是否是双向流
     bidi_flag: bool,
+
+    /// 允许的最大 Stream 数量.
     maximum_streams: usize,
 }
 
 impl StreamsBlockedFrame {
+    /// 构造一个 STREAM_BLOCKED 帧
+    ///
+    /// # Arguments
+    /// `bidi_flag`: 是否是双向流
+    /// # Returns
+    /// 返回一个 STREAM_BLOCKED 帧
     pub fn new(bidi_flag: bool) -> Self {
         Self {
             bidi_flag,
@@ -27,14 +36,40 @@ impl StreamsBlockedFrame {
         }
     }
 
+    /// 获取是否是双向流
+    ///
+    /// # Returns
+    /// 返回是否是双向流
     #[inline(always)]
     pub const fn is_bidi(&self) -> bool {
         self.bidi_flag
     }
 
+    /// 设置 STREAM_BLOCKED 是否是双向流
+    ///
+    /// # Arguments
+    /// `bidi_flag` - 是否是双向流
     #[inline(always)]
-    pub const fn get_streams(&self) -> usize {
+    pub fn set_bidi(&mut self, bidi_flag: bool) {
+        self.bidi_flag = bidi_flag
+    }
+
+    /// 获取流数量的限制
+    ///
+    /// # Returns
+    /// 返回流数量的限制
+    #[inline(always)]
+    pub const fn get_maximum_streams(&self) -> usize {
         self.maximum_streams
+    }
+
+    /// 设置流数量的限制
+    ///
+    /// # Arguments
+    /// `maximum_streams` - 流数量的限制
+    #[inline(always)]
+    pub fn set_maximum_streams(&mut self, maximum_streams: usize) {
+        self.maximum_streams = maximum_streams
     }
 }
 

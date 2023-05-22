@@ -1,4 +1,7 @@
-use crate::util;
+use crate::{
+    attr::{StreamID, StreamIDGetter, StreamIDSetter},
+    util,
+};
 
 use super::{
     serialize::{Deserializer, Serializer},
@@ -19,17 +22,54 @@ use super::{
 ///     Stream ID (i),
 ///     Maximum Stream Data (i),
 /// }
-pub struct MaxStreamDataFrame {
-    stream_id: u64,
+pub(crate) struct MaxStreamDataFrame {
+    /// 流标识
+    stream_id: StreamID,
+
+    /// 限定流上发送的最大数据量
     maximum_data: usize,
 }
 
 impl MaxStreamDataFrame {
-    pub fn new() -> Self {
+    /// 构造一个 MAX_STREAM_DATA 帧
+    ///
+    /// # Returns
+    /// 返回一个 MAX_STREAM_DATA 帧
+    pub(crate) fn new() -> Self {
         Self {
             stream_id: 0,
             maximum_data: 0,
         }
+    }
+
+    /// 获取流上发送的最大数据量
+    ///
+    /// # Returns
+    /// 返回流上发送的最大数据量
+    #[inline(always)]
+    pub(crate) const fn get_maximum_data(&self) -> usize {
+        self.maximum_data
+    }
+
+    /// 设置流上发送的最大数据量
+    ///
+    /// # Arguments
+    /// `maximum_data` - 流上发送的最大数据量
+    #[inline(always)]
+    pub(crate) fn set_maximum_data(&mut self, maximum_data: usize) {
+        self.maximum_data = maximum_data
+    }
+}
+
+impl StreamIDGetter for MaxStreamDataFrame {
+    fn get_stream_id(&self) -> StreamID {
+        self.stream_id
+    }
+}
+
+impl StreamIDSetter for MaxStreamDataFrame {
+    fn set_stream_id(&mut self, stream_id: StreamID) {
+        self.stream_id = stream_id
     }
 }
 

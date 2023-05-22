@@ -1,4 +1,7 @@
-use crate::util;
+use crate::{
+    attr::{StreamID, StreamIDGetter, StreamIDSetter},
+    util,
+};
 
 use super::{
     serialize::{Deserializer, Serializer},
@@ -16,17 +19,56 @@ use super::{
 ///     Stream ID (i),
 ///     Maximum Stream Data (i),
 /// }
-pub struct StreamDataBlockedFrame {
-    stream_id: u64,
+pub(crate) struct StreamDataBlockedFrame {
+    /// 数据流标识
+    stream_id: StreamID,
+
+    /// 数据流流量控制限制
     maximum_data: usize,
 }
 
 impl StreamDataBlockedFrame {
-    pub fn new() -> Self {
+    /// 构造一个 STREAM_DATA_BLOCKED 帧
+    ///
+    /// # Returns
+    /// 返回一个 STREAM_DATA_BLOCKED 帧
+    pub(crate) fn new() -> Self {
         Self {
             stream_id: 0,
             maximum_data: 0,
         }
+    }
+
+    /// 获取数据流最大数据量
+    ///
+    /// # Returns
+    /// 返回数据流的最大数据量
+    #[inline(always)]
+    pub(crate) const fn get_maximum_data(&self) -> usize {
+        self.maximum_data
+    }
+
+    /// 设置数据流的最大数据量
+    ///
+    /// # Arguments
+    /// `maximum_data` - 数据流的最大数据量
+    #[inline(always)]
+    pub(crate) fn set_maximum_data(&mut self, maximum_data: usize) {
+        self.maximum_data = maximum_data
+    }
+}
+
+impl StreamIDGetter for StreamDataBlockedFrame {
+    #[inline(always)]
+    fn get_stream_id(&self) -> StreamID {
+        self.stream_id
+    }
+}
+
+impl StreamIDSetter for StreamDataBlockedFrame {
+    #[inline(always)]
+    fn set_stream_id(&mut self, stream_id: StreamID) {
+        self.stream_id = stream_id;
     }
 }
 

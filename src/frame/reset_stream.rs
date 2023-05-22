@@ -1,4 +1,7 @@
-use crate::util;
+use crate::{
+    attr::{StreamID, StreamIDGetter, StreamIDSetter},
+    util,
+};
 
 use super::{
     serialize::{Deserializer, Serializer},
@@ -21,7 +24,7 @@ use super::{
 /// }
 pub(crate) struct ResetStreamFrame {
     /// Stream 标识
-    stream_id: u64,
+    stream_id: StreamID,
 
     /// 应用错误码
     ///
@@ -46,24 +49,6 @@ impl ResetStreamFrame {
             error_code: 0,
             final_size: 0,
         }
-    }
-
-    /// 获取 Stream 标识
-    ///
-    /// # Returns
-    /// 返回 Stream 标识
-    #[inline(always)]
-    pub(crate) const fn get_stream_id(&self) -> u64 {
-        self.stream_id
-    }
-
-    /// 设置 Stream 标识
-    ///
-    /// # Arguments
-    /// `stream_id` - Stream 标识
-    #[inline(always)]
-    pub(crate) fn set_stream_id(&mut self, stream_id: u64) {
-        self.stream_id = stream_id;
     }
 
     /// 获取 Stream 的最终大小.
@@ -99,6 +84,18 @@ impl ResetStreamFrame {
     /// `error_code` - 应用错误码
     pub(crate) fn set_error_code(&mut self, error_code: u64) {
         self.error_code = error_code
+    }
+}
+
+impl StreamIDGetter for ResetStreamFrame {
+    fn get_stream_id(&self) -> StreamID {
+        self.stream_id
+    }
+}
+
+impl StreamIDSetter for ResetStreamFrame {
+    fn set_stream_id(&mut self, stream_id: StreamID) {
+        self.stream_id = stream_id
     }
 }
 

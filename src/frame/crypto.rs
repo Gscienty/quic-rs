@@ -1,4 +1,7 @@
-use crate::util;
+use crate::{
+    attr::{StreamDataGetter, StreamDataSetter},
+    util,
+};
 
 use super::{
     serialize::{Deserializer, Serializer},
@@ -35,47 +38,24 @@ impl CryptoFrame {
     /// 构造一个 CRYPTO 帧.
     ///
     /// # Returns
-    /// CRYPTO 帧
+    /// 返回一个 CRYPTO 帧
     pub(crate) fn new() -> Self {
         Self {
             offset: 0,
             data: Vec::new(),
         }
     }
+}
 
-    /// 获取 CRYPTO 数据偏移量
-    ///
-    /// # Returns
-    /// CRYPTO 数据偏移量
-    #[inline(always)]
-    pub(crate) const fn get_offset(&self) -> usize {
-        self.offset
+impl StreamDataGetter for CryptoFrame {
+    fn get_data(&self) -> (usize, &[u8]) {
+        (self.offset, &self.data)
     }
+}
 
-    /// 设置 CRYPTO 数据偏移量
-    ///
-    /// # Arguments
-    /// `offset` - 数据偏移量
-    #[inline(always)]
-    pub(crate) fn set_offset(&mut self, offset: usize) {
-        self.offset = offset
-    }
-
-    /// 获取 CRYPTO 帧携带的数据
-    ///
-    /// # Returns
-    /// 返回 CRYPTO 帧携带的数据
-    #[inline(always)]
-    pub(crate) fn get_data(&self) -> &[u8] {
-        &self.data
-    }
-
-    /// 设置 CRYPTO 帧携带的数据
-    ///
-    /// # Arguments
-    /// `data` - 需要写进 CRYPTO 帧的数据
-    #[inline(always)]
-    pub(crate) fn set_data(&mut self, data: &[u8]) {
+impl StreamDataSetter for CryptoFrame {
+    fn set_data(&mut self, offset: usize, data: &[u8]) {
+        self.offset = offset;
         self.data.extend_from_slice(data);
     }
 }

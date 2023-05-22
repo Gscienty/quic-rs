@@ -12,13 +12,34 @@ use super::{
 ///     Type (i) = 0x1a,
 ///     Data (64),
 /// }
-pub struct PathResponseFrame {
+pub(crate) struct PathResponseFrame {
     data: [u8; 8],
 }
 
 impl PathResponseFrame {
-    pub fn new() -> Self {
+    /// 构造一个 PATH_RESPONSE 帧
+    ///
+    /// # Returns
+    /// 返回一个 PATH_RESPONSE 帧
+    pub(crate) fn new() -> Self {
         Self { data: [0; 8] }
+    }
+
+    /// 获取 PATH_RESPONSE 帧内的 Data
+    ///
+    /// # Returns
+    /// 帧内 Data
+    #[inline(always)]
+    pub(crate) const fn get_data(&self) -> &[u8] {
+        &self.data
+    }
+
+    /// 设置 PATH_RESPONSE 帧内的 Data
+    ///
+    /// # Arguments
+    /// `data` - 帧内 Data
+    pub(crate) fn set_data(&mut self, data: &[u8]) {
+        self.data.copy_from_slice(data)
     }
 }
 

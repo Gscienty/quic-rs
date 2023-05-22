@@ -16,12 +16,35 @@ use super::{
 ///     Maximum Data (i),
 /// }
 pub struct DataBlockedFrame {
+    /// 期望发送的最大数据量
     maximum_data: usize,
 }
 
 impl DataBlockedFrame {
+    /// 构造一个 DATA_BLOCKED 帧
+    ///
+    /// # Returns
+    /// 返回一个 DATA_BLOCKED 帧
     pub fn new() -> Self {
         Self { maximum_data: 0 }
+    }
+
+    /// 获取发送的最大数据量
+    ///
+    /// # Returns
+    /// 返回发送的最大数据量
+    #[inline(always)]
+    pub(crate) const fn get_maximum_data(&self) -> usize {
+        self.maximum_data
+    }
+
+    /// 设置发送的最大数据量
+    ///
+    /// # Arguments
+    /// `maximum_data` - 发送的最大数据量
+    #[inline(always)]
+    pub(crate) fn set_maximum_data(&mut self, maximum_data: usize) {
+        self.maximum_data = maximum_data
     }
 }
 

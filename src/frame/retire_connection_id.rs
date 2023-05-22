@@ -1,4 +1,4 @@
-use crate::util;
+use crate::{attr::PacketNumber, util};
 
 use super::{
     serialize::{Deserializer, Serializer},
@@ -15,13 +15,35 @@ use super::{
 ///     Type (i) = 0x19,
 ///     Sequence Number (i),
 /// }
-pub struct RetireConnectionIDFrame {
-    seq: u64,
+pub(crate) struct RetireConnectionIDFrame {
+    /// 表示该数据包编号之后 Connection ID 将不再使用.
+    seq: PacketNumber,
 }
 
 impl RetireConnectionIDFrame {
-    pub fn new() -> Self {
+    /// 构造一个 RETIRE_CONNECTION_ID 帧
+    ///
+    /// # Returns
+    /// 返回一个 RETIRE_CONNECTION_ID 帧
+    pub(crate) fn new() -> Self {
         Self { seq: 0 }
+    }
+
+    /// 设置终止使用 Connection ID 的数据包编号
+    ///
+    /// # Arguments
+    /// `seq` - 数据包编号
+    #[inline(always)]
+    pub(crate) fn set_seq(&mut self, seq: PacketNumber) {
+        self.seq = seq;
+    }
+
+    /// 获取终止使用 Connection ID 的数据包编号
+    ///
+    /// # Returns
+    /// 返回数据包编号
+    pub(crate) const fn get_seq(&self) -> PacketNumber {
+        self.seq
     }
 }
 

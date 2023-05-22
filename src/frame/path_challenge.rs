@@ -17,8 +17,29 @@ pub struct PathChallengeFrame {
 }
 
 impl PathChallengeFrame {
+    /// 构造一个 PATH_CHALLENGE 帧
+    ///
+    /// # Returns
+    /// 返回一个 PATH_CHALLENGE 帧
     pub fn new() -> Self {
         Self { data: [0; 8] }
+    }
+
+    /// 获取 PATH_CHALLENGE 帧内的 Data
+    ///
+    /// # Returns
+    /// 帧内 Data
+    #[inline(always)]
+    pub(crate) const fn get_data(&self) -> &[u8] {
+        &self.data
+    }
+
+    /// 设置 PATH_CHALLENGE 帧内的 Data
+    ///
+    /// # Arguments
+    /// `data` - 帧内 Data
+    pub(crate) fn set_data(&mut self, data: &[u8]) {
+        self.data.copy_from_slice(data)
     }
 }
 

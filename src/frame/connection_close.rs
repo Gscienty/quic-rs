@@ -19,21 +19,104 @@ use super::{
 ///     Reason Phrase Length (i),
 ///     Reason Phrase (..),
 /// }
-pub struct ConnectionCloseFrame {
+pub(crate) struct ConnectionCloseFrame {
+    /// 是否是系统级（QUIC层级）报错
     sys_err: bool,
+
+    /// 错误代码
     error_code: u64,
+
+    /// 触发错误的帧类型；当帧类型未知时，使用值为0.
     frame_type: u64,
+
+    /// 错误原因
     reason: String,
 }
 
 impl ConnectionCloseFrame {
-    pub fn new(sys_err: bool) -> Self {
+    /// 构造一个 CONNECTION_CLOSE 帧
+    ///
+    /// # Returns
+    /// 返回一个 CONNECTION_CLOSE 帧
+    pub(crate) fn new(sys_err: bool) -> Self {
         Self {
             sys_err,
             error_code: 0,
             frame_type: 0,
             reason: String::new(),
         }
+    }
+
+    /// 获取是否是系统级（QUIC 层级）报错
+    ///
+    /// # Returns
+    /// 返回是否是系统级（QUIC层级）报错
+    #[inline(always)]
+    pub(crate) const fn get_sys_err(&self) -> bool {
+        self.sys_err
+    }
+
+    /// 设置是否是系统级（QUIC 层级）报错
+    ///
+    /// # Arguments
+    /// `sys_err` - 是否是系统级（QUIC层级）报错
+    #[inline(always)]
+    pub(crate) fn set_sys_err(&mut self, sys_err: bool) {
+        self.sys_err = sys_err
+    }
+
+    /// 获取错误代码
+    ///
+    /// # Returns
+    /// 返回错误代码
+    #[inline(always)]
+    pub(crate) const fn get_error_code(&self) -> u64 {
+        self.error_code
+    }
+
+    /// 设置错误代码
+    ///
+    /// # Arguments
+    /// `error_code` - 错误代码
+    #[inline(always)]
+    pub(crate) fn set_error_code(&mut self, error_code: u64) {
+        self.error_code = error_code
+    }
+
+    /// 获取触发错误的帧类型
+    ///
+    /// # Returns
+    /// 返回帧类型
+    #[inline(always)]
+    pub(crate) const fn get_frame_type(&self) -> u64 {
+        self.frame_type
+    }
+
+    /// 设置触发错误的帧类型
+    ///
+    /// # Arguments
+    /// `frame_type` - 帧类型
+    #[inline(always)]
+    pub(crate) fn set_frame_type(&mut self, frame_type: u64) {
+        self.frame_type = frame_type
+    }
+
+    /// 获取错误原因
+    ///
+    /// # Returns
+    /// 返回错误原因
+    #[inline(always)]
+    pub(crate) fn get_reason(&self) -> &str {
+        &self.reason
+    }
+
+    /// 设置错误原因
+    ///
+    /// # Arguments
+    /// `reason` - 错误原因
+    #[inline(always)]
+    pub(crate) fn set_reason(&mut self, reason: &str) {
+        self.reason = String::from(reason)
     }
 }
 
