@@ -1,8 +1,5 @@
 mod types;
 
-// 包含序列化与反序列化特征
-mod serialize;
-
 mod ack;
 mod connection_close;
 mod crypto;

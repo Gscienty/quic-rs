@@ -1,12 +1,9 @@
 use crate::{
-    attr::{StreamDataGetter, StreamDataSetter},
+    attr::{Deserializer, Serializer, StreamDataGetter, StreamDataSetter},
     util,
 };
 
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
-};
+use super::types::FrameType;
 
 /// CRYPTO 帧
 ///

@@ -1,12 +1,9 @@
 use crate::{
-    attr::{StreamID, StreamIDGetter, StreamIDSetter},
+    attr::{Deserializer, Serializer, StreamID, StreamIDGetter, StreamIDSetter},
     util,
 };
 
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
-};
+use super::types::FrameType;
 
 /// STREAM_DATA_BLOCKED 帧
 ///

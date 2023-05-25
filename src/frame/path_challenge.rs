@@ -1,7 +1,6 @@
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
-};
+use crate::attr::{Deserializer, Serializer};
+
+use super::types::FrameType;
 
 /// PATH_CHALLENGE 帧
 ///

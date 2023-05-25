@@ -1,12 +1,9 @@
 use crate::{
-    attr::{ConnectionID, PacketNumber},
+    attr::{ConnectionID, Deserializer, PacketNumber, Serializer},
     util,
 };
 
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
-};
+use super::types::FrameType;
 
 /// NEW_CONNECTION_ID 帧结构如下
 ///

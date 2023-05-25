@@ -1,9 +1,9 @@
-use crate::util;
-
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
+use crate::{
+    attr::{Deserializer, Serializer},
+    util,
 };
+
+use super::types::FrameType;
 
 /// NEW_TOKEN 帧
 ///

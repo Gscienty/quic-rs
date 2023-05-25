@@ -1,9 +1,9 @@
-use crate::{attr::PacketNumber, util};
-
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
+use crate::{
+    attr::{Deserializer, PacketNumber, Serializer},
+    util,
 };
+
+use super::types::FrameType;
 
 /// RETIRE_CONNECTION_ID 帧
 ///

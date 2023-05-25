@@ -1,12 +1,12 @@
 use crate::{
-    attr::{StreamDataGetter, StreamDataSetter, StreamID, StreamIDGetter, StreamIDSetter},
+    attr::{
+        Deserializer, Serializer, StreamDataGetter, StreamDataSetter, StreamID, StreamIDGetter,
+        StreamIDSetter,
+    },
     util,
 };
 
-use super::{
-    serialize::{Deserializer, Serializer},
-    types::FrameType,
-};
+use super::types::FrameType;
 
 /// STREAM 帧
 ///
